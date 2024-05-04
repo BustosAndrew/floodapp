@@ -89,9 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
-              double waterLevel = data['water'] ?? 0.0;
-              double foodLevel = data['food'] ?? 0.0;
-              double energyLevel = data['energy'] ?? 0.0;
+              double waterLevel = (data['water'] as int? ?? 0).toDouble();
+              double foodLevel = (data['food'] as int? ?? 0).toDouble();
+              double energyLevel = (data['energy'] as int? ?? 0).toDouble();
 
               return Container(
                 height: MediaQuery.of(context).size.height,
