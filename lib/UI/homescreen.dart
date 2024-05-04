@@ -56,9 +56,21 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedIndex = index;
     });
 
-    if (index == 0) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MapPage()));
+    switch (index) {
+      case 0:
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MapPage()));
+        break;
+      case 1:
+        // Navigate to Home page or refresh Home page
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        break;
+      case 2:
+        // Navigate to Chat page
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Chat()));
+        break;
     }
   }
 
