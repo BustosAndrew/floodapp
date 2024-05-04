@@ -1,3 +1,4 @@
+import 'package:flood/UI/homescreen.dart';
 import 'package:flood/UI/signup.dart';
 import 'package:flood/auth/auth.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +97,15 @@ class _LoginFormState extends State<LoginForm> {
                                       builder: (context) => const SignUpPage()),
                                 );
                               }),
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen()),
+                                );
+                              },
+                              child: Text('Skill Issue'))
                         ],
                       )),
                 ],

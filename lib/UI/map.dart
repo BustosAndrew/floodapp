@@ -8,8 +8,19 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   int _selectedIndex = 0;
-  String _currentImage =
-      'images/MapSafeZones.png'; // Ensure this path is correct
+  String _currentImage = 'images/MapSafeZones.png'; // Initial image
+
+  TransformationController _controller = TransformationController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Set initial scale more dynamically
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.value = Matrix4.identity()
+        ..scale(1.5); // Adjusted for better initial fit
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -19,8 +30,13 @@ class _MapPageState extends State<MapPage> {
 
   void _handleMenuSelection(String choice) {
     setState(() {
-      _currentImage =
-          'images/MapSafeZones.png'; // Modify to change the map image based on selection
+      if (choice == 'Option 2') {
+        _currentImage =
+            'images/HotzoneMap.png'; // Change to new image on selection of Option 2
+      } else {
+        _currentImage =
+            'images/MapSafeZones.png'; // Revert to original or handle other options
+      }
     });
   }
 
@@ -41,23 +57,16 @@ class _MapPageState extends State<MapPage> {
         ),
         child: Stack(
           children: [
-            Center(
-              child: InteractiveViewer(
-                boundaryMargin: EdgeInsets.all(20),
-                minScale: 0.5,
-                maxScale: 4.0,
-                child: Container(
-                  width: 700, // Adjust based on your needs
-                  height: 1100, // Adjust based on your needs
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    border: Border.all(color: Colors.black, width: 3),
-                  ),
-                  child: Image.asset(
-                    _currentImage,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+            InteractiveViewer(
+              transformationController: _controller,
+              boundaryMargin: EdgeInsets.zero,
+              minScale: 0.1,
+              maxScale: 4.0,
+              constrained: false,
+              child: Image.asset(
+                _currentImage,
+                fit: BoxFit
+                    .cover, // Ensuring the image covers the area, adjust as needed
               ),
             ),
             Positioned(
@@ -75,7 +84,7 @@ class _MapPageState extends State<MapPage> {
                     child: Text('Option 2'),
                   ),
                 ],
-                icon: Icon(Icons.menu, size: 30, color: Colors.black),
+                icon: Icon(Icons.menu, size: 30, color: Colors.white),
               ),
             ),
           ],
