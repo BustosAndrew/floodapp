@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'homescreen.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -43,8 +44,16 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(onPressed: () {}, child: Text('Login'))),
+            padding: EdgeInsets.symmetric(vertical: 16.0),
+            child: ElevatedButton(
+                child: Text("Login"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+                }),
+          ),
         ],
       ),
     );
