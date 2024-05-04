@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flood/UI/map.dart';
 import 'package:flutter/material.dart';
 import 'add.dart';
@@ -44,123 +42,494 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  double waterLevel = 0.0;
+  double foodLevel = 0.0;
+  double energyLevel = 0.0;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
-    // Example navigation logic, adjust according to actual usage
-    switch (index) {
-      case 0:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MapPage()));
-        break;
-      // Add more cases as needed for other indices
+    if (index == 0) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MapPage()));
     }
+  }
+
+  void _updateLevels(SupplyData newData) {
+    setState(() {
+      waterLevel = newData.waterLevel / 100.0;
+      foodLevel = newData.foodLevel / 100.0;
+      energyLevel = newData.energyLevel / 100.0;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser;
-    String userId = user != null ? user.uid : '';
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Spring',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500)),
+          title: Text(
+            'Spring',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           shape: ContinuousRectangleBorder(
             borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(50),
-                bottomRight: Radius.circular(50)),
+              bottomLeft: Radius.circular(50),
+              bottomRight: Radius.circular(50),
+            ),
           ),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-          child: StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('users')
-                .doc(userId)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData)
-                return Center(child: CircularProgressIndicator());
-
-              Map<String, dynamic> data =
-                  snapshot.data!.data() as Map<String, dynamic>;
-              double waterLevel = (data['water'] as int? ?? 0).toDouble();
-              double foodLevel = (data['food'] as int? ?? 0).toDouble();
-              double energyLevel = (data['energy'] as int? ?? 0).toDouble();
-
-              return Container(
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Color(0xFF0E1A68), Color(0xFF263DA8)],
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Color(0xFF0E1A68), // Light blue at the bottom
+                  Color(0xFF263DA8), // Darker blue at the top
+                ],
+              ),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 49, left: 9, bottom: 31),
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Center the row horizontally
+                    children: [
+                      Container(
+                        width: 363,
+                        height: 170,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 50, bottom: 20, top: 30),
+                                  child: Text(
+                                    "Disaster Level",
+                                    style: TextStyle(
+                                      fontSize: 34,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 50, bottom: 40),
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: GestureDetector(
+                                      //Shows popup with information
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("Information"),
+                                              content: Text(
+                                                  "Topography and Hydrology, Historical Flood Data, Climate and Weather Patterns, Infrastructure and Drainage Systems, Land Use and Development, Floodplain Mapping, Community Preparedness and Response. "),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text("Close"),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Text(
+                                        "?",
+                                        style: TextStyle(
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              width: 261,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(70),
+                                child: LinearProgressIndicator(
+                                  minHeight: 24,
+                                  value: 0.6,
+                                  backgroundColor:
+                                      Color.fromARGB(255, 177, 175, 175),
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(Colors.red),
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 40.0),
+                                  child: Text(
+                                    'Low',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 60.0),
+                                  child: Text(
+                                    'Medium',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 50.0),
+                                  child: Text(
+                                    'High',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Column(
-                  children: [
-                    buildSupplyLevelIndicator("Water", waterLevel, Colors.blue),
-                    buildSupplyLevelIndicator("Food", foodLevel, Colors.green),
-                    buildSupplyLevelIndicator(
-                        "Energy", energyLevel, Colors.yellow),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, left: 9, bottom: 31),
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Center the row horizontally
+                    children: [
+                      Container(
+                        width: 363,
+                        height: 225,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 50, bottom: 20, top: 30),
+                                  child: Text(
+                                    "Supply Levels",
+                                    style: TextStyle(
+                                      fontSize: 34,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 50, bottom: 40),
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => AddPage()),
+                                        );
+                                      },
+                                      child: Text(
+                                        "+",
+                                        style: TextStyle(
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 30.0, right: 30),
+                                      child: Text(
+                                        "Water",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Container(
+                                        width: 200,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(70),
+                                          child: LinearProgressIndicator(
+                                            minHeight: 24,
+                                            value: waterLevel,
+                                            backgroundColor: Color.fromARGB(
+                                                255, 177, 175, 175),
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.blue),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 30.0, right: 30),
+                                      child: Text(
+                                        "Food",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 20.0),
+                                      child: Container(
+                                        width: 200,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(70),
+                                          child: LinearProgressIndicator(
+                                            minHeight: 24,
+                                            value: foodLevel,
+                                            backgroundColor: Color.fromARGB(
+                                                255, 177, 175, 175),
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.green),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 30.0, right: 30),
+                                      child: Text(
+                                        "Energy",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 200,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(70),
+                                        child: LinearProgressIndicator(
+                                          minHeight: 24,
+                                          value: energyLevel,
+                                          backgroundColor: Color.fromARGB(
+                                              255, 177, 175, 175),
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.yellow),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              );
-            },
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, left: 9, bottom: 31),
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Center the row horizontally
+                    children: [
+                      Container(
+                        width: 363,
+                        height: 260,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 2.5, bottom: 5, top: 30),
+                                  child: Text(
+                                    "Household Readiness",
+                                    style: TextStyle(
+                                      fontSize: 34,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 40.0, bottom: 20),
+                                      child: Text(
+                                        "Cody",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 60, top: 20),
+                                      child: Container(
+                                        width: 200,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(70),
+                                          child: LinearProgressIndicator(
+                                            minHeight: 12,
+                                            value: 0.6,
+                                            backgroundColor: Color.fromARGB(
+                                                255, 177, 175, 175),
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.red),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 40.0, bottom: 20),
+                                      child: Text(
+                                        "Ricky",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 60, top: 20),
+                                      child: Container(
+                                        width: 200,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(70),
+                                          child: LinearProgressIndicator(
+                                            minHeight: 12,
+                                            value: 0.6,
+                                            backgroundColor: Color.fromARGB(
+                                                255, 177, 175, 175),
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.green),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 35.0, bottom: 20),
+                                      child: Text(
+                                        "Andor",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 60, top: 20),
+                                      child: Container(
+                                        width: 200,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(70),
+                                          child: LinearProgressIndicator(
+                                            minHeight: 12,
+                                            value: 0.6,
+                                            backgroundColor: Color.fromARGB(
+                                                255, 177, 175, 175),
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.yellow),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: CustomBottomNavBar(
           selectedIndex: _selectedIndex,
           onItemTapped: _onItemTapped,
-        ),
-      ),
-    );
-  }
-
-  Widget buildSupplyLevelIndicator(
-      String label, double level, Color progressColor) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-        width: double.infinity, // Use the full width of the screen
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 3), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 10),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: LinearProgressIndicator(
-                minHeight: 20,
-                value: level,
-                backgroundColor: Color.fromARGB(255, 230, 230, 230),
-                valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-              ),
-            ),
-          ],
         ),
       ),
     );
