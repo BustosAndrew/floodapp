@@ -96,12 +96,123 @@ class AddPage extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            _buildInputField(
-                                'Water', 'Enter gallons', _waterController),
-                            _buildInputField(
-                                'Food', 'Enter # of cans', _foodController),
-                            _buildInputField(
-                                'Energy', 'Enter hours', _energyController),
+                            Row(
+                              children: [
+                                _buildInputField(
+                                    'Water', 'Enter gallons', _waterController),
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("Water you waiting for?"),
+                                          content: Text(
+                                            "DUring a flood you might loose access to clean water. We recommend storing at least 50 gallons. This should be enough for drinking and sanitation purposes.",
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text("Close"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 55.0),
+                                    child: Text(
+                                      '?',
+                                      style: TextStyle(
+                                        fontSize: 35,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                _buildInputField(
+                                    'Food', 'Enter # of cans', _foodController),
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("Can do attitude!"),
+                                          content: Text(
+                                            "While it depends on the type of canned food stored, we estimate you should stock roughly 3 cans per person per day, totaling around 50 cans.",
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text("Close"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 65.0),
+                                    child: Text(
+                                      '?',
+                                      style: TextStyle(
+                                        fontSize: 35,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                _buildInputField(
+                                    'Energy', 'Enter hours', _energyController),
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("How much energy?"),
+                                          content: Text(
+                                            "For a power outage, you should have enough backup energy stored to last you for at least 72 hours. To last roughly up to a week with limited use.",
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text("Close"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 45.0),
+                                    child: Text(
+                                      '?',
+                                      style: TextStyle(
+                                        fontSize: 35,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                             SizedBox(height: 15),
                             ElevatedButton(
                               onPressed: () => submitData(context),
