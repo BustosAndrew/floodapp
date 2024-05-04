@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flood/model/supply.dart';
 
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddPage extends StatelessWidget {
@@ -16,26 +16,35 @@ class AddPage extends StatelessWidget {
     double foodCount = double.tryParse(_foodController.text) ?? 0.0;
     double energyHours = double.tryParse(_energyController.text) ?? 0.0;
 
-    // Assuming you have a method to submit data
-    SupplyData newData = SupplyData(
-      waterLevel: waterLevel,
-      foodLevel: foodCount,
-      energyLevel: energyHours,
-    );
+    // Get the current user's UID
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      // Reference to the user's document in the 'users' collection
+      DocumentReference userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
 
-    // Add the data to Firestore
-    DocumentReference ref =
-        FirebaseFirestore.instance.collection('supplies').doc();
-    await ref.set({
-      'water': waterLevel,
-      'food': foodCount,
-      'energy': energyHours,
-      'timestamp':
-          FieldValue.serverTimestamp(), // To add a timestamp when data is added
-    });
+      // Update or set the user's data
+      await userDocRef.update({
+        'water': waterLevel,
+        'food': foodCount,
+        'energy': energyHours,
+        'timestamp': FieldValue.serverTimestamp(), // Adding a timestamp
+      }).catchError((error) {
+        // If the document does not exist, set the data instead of updating
+        userDocRef.set({
+          'water': waterLevel,
+          'food': foodCount,
+          'energy': energyHours,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      });
 
-    // Navigate back to the HomeScreen or show a success message
-    Navigator.pop(context);
+      // Optionally, navigate back or show a success message
+      Navigator.pop(context);
+    } else {
+      // Handle the case when the user is not logged in
+      print('No user logged in');
+    }
   }
 
   @override
