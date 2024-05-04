@@ -122,6 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Align(
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
+                                      //Shows popup with information
                                       onTap: () {
                                         showDialog(
                                           context: context,
