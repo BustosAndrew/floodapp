@@ -1,3 +1,4 @@
+import 'package:flood/UI/homescreen.dart';
 import 'package:flutter/material.dart';
 
 class MapPage extends StatefulWidget {
@@ -17,42 +18,39 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('New Page'),
-      ),
-      body: Center(
-        child: Container(
-          width: 300,
-          height: 300,
+        appBar: AppBar(
+          title: Text('New Page'),
+        ),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
-            color: Colors.grey[300],
-            border: Border.all(color: Colors.black, width: 3),
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color(0xFF263DA8), // Light blue at the bottom
+                Color(0xFF0E1A68), // Darker blue at the top
+              ],
+            ),
           ),
           child: Center(
-            child:
-                Text('Place your image here', style: TextStyle(fontSize: 16)),
+            child: Container(
+              width: 350,
+              height: 550,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                border: Border.all(color: Colors.black, width: 3),
+              ),
+              child: Center(
+                child: Text('Place your image here',
+                    style: TextStyle(fontSize: 16)),
+              ),
+            ),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ),
-    );
+        bottomNavigationBar: CustomBottomNavBar(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onItemTapped,
+        ));
   }
 }
