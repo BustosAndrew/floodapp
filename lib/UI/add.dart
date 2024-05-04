@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flood/model/supply.dart';
 
 class AddPage extends StatelessWidget {
+  void submitData(BuildContext context) {
+    // Assuming you have a method to submit data
+    SupplyData newData = SupplyData(
+      waterLevel: 0.8,
+      foodLevel: 0.5,
+      energyLevel: 0.3,
+    );
+
+    // Navigate back to the HomeScreen and pass the data
+    Navigator.pop(context, newData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -140,7 +153,7 @@ class AddPage extends StatelessWidget {
                             ),
                             SizedBox(height: 15),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () => submitData(context),
                               child: Text(
                                 'Submit',
                                 style: TextStyle(

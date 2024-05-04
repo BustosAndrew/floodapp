@@ -1,6 +1,8 @@
 import 'package:flood/UI/map.dart';
 import 'package:flutter/material.dart';
 import 'add.dart';
+import 'map.dart';
+import 'package:flood/model/supply.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   final int selectedIndex;
@@ -40,6 +42,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  double waterLevel = 0.0;
+  double foodLevel = 0.0;
+  double energyLevel = 0.0;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -50,6 +55,14 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => MapPage()));
     }
+  }
+
+  void _updateLevels(SupplyData newData) {
+    setState(() {
+      waterLevel = newData.waterLevel / 100.0;
+      foodLevel = newData.foodLevel / 100.0;
+      energyLevel = newData.energyLevel / 100.0;
+    });
   }
 
   @override
@@ -284,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               BorderRadius.circular(70),
                                           child: LinearProgressIndicator(
                                             minHeight: 24,
-                                            value: 0.6,
+                                            value: waterLevel,
                                             backgroundColor: Color.fromARGB(
                                                 255, 177, 175, 175),
                                             valueColor:
@@ -318,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               BorderRadius.circular(70),
                                           child: LinearProgressIndicator(
                                             minHeight: 24,
-                                            value: 0.6,
+                                            value: foodLevel,
                                             backgroundColor: Color.fromARGB(
                                                 255, 177, 175, 175),
                                             valueColor:
@@ -348,7 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.circular(70),
                                         child: LinearProgressIndicator(
                                           minHeight: 24,
-                                          value: 0.6,
+                                          value: energyLevel,
                                           backgroundColor: Color.fromARGB(
                                               255, 177, 175, 175),
                                           valueColor:
