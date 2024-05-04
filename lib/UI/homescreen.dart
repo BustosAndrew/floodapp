@@ -1,34 +1,65 @@
-import 'dart:ffi';
-import 'package:flutter/material.dart';
-import 'map.dart';
+import 'package:flood/UI/map.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
+class CustomBottomNavBar extends StatefulWidget {
+  final int selectedIndex;
+  final Function(int) onItemTapped;
+
+  CustomBottomNavBar({required this.selectedIndex, required this.onItemTapped});
+
+  @override
+  _CustomBottomNavBarState createState() => _CustomBottomNavBarState();
 }
 
-class MyApp extends StatelessWidget {
+class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Home Screen',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomeScreen(),
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.map),
+          label: 'Map',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+      ],
+      currentIndex: widget.selectedIndex,
+      selectedItemColor: Colors.amber[800],
+      onTap: widget.onItemTapped,
     );
   }
 }
+// Ensure to import your MapPage widget
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0; // Default index
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (index == 0) {
+      // If Map tab is selected
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MapPage()));
+    }
+    // Add more conditions here if there are other tabs that need specific navigation
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Spring',
-          ),
+          title: Text('Home Screen'),
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -39,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                 end: Alignment.topCenter,
                 colors: [
                   Color(0xFF263DA8), // Light blue at the bottom
-                  Color(0xFF0E1A68), // Purple at the top
+                  Color(0xFF0E1A68), // Darker blue at the top
                 ],
               ),
             ),
@@ -48,30 +79,25 @@ class HomeScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(
                       top: 49, left: 33, right: 33, bottom: 31),
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.topCenter,
-                            child: Text(
-                              "Disaster Level",
-                              style: TextStyle(
-                                fontSize: 34,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Text(
-                              "?",
-                              style: TextStyle(
-                                fontSize: 40,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        "Disaster Level",
+                        style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(
+                          width:
+                              10), // Adds a space between the text and the icon
+                      Text(
+                        "?",
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
@@ -80,17 +106,9 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Map',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.map),
-              label: 'home',
-            ),
-          ],
+        bottomNavigationBar: CustomBottomNavBar(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onItemTapped,
         ),
       ),
     );
