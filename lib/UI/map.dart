@@ -77,11 +77,11 @@ class _MapPageState extends State<MapPage> {
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
                     value: 'Option 1',
-                    child: Text('Option 1'),
+                    child: Text('Safe House'),
                   ),
                   PopupMenuItem<String>(
                     value: 'Option 2',
-                    child: Text('Option 2'),
+                    child: Text('Flood Zones'),
                   ),
                 ],
                 icon: Icon(Icons.menu, size: 30, color: Colors.white),
