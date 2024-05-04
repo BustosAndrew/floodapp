@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'add.dart';
 import 'map.dart';
 import 'package:flood/model/supply.dart';
+import 'Chat.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   final int selectedIndex;
@@ -26,6 +27,10 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.chat),
+          label: 'Chats',
         ),
       ],
       currentIndex: widget.selectedIndex,
@@ -71,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Spring',
+            'Flood Season',
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w500,
