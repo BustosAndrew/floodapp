@@ -6,6 +6,10 @@ version: 0.1.0
 environment:
   sdk: '>=3.3.4 <4.0.0'
 
+
+
+
+
 dependencies:
   firebase_core: ^2.30.1
   flutter:
@@ -18,3 +22,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:  # Lists assets, such as image files
+    - images/HotzoneMap.png
+    - images/MapSafeZones.png
+   
