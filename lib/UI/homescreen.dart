@@ -124,41 +124,45 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildSupplyLevelIndicator(
       String label, double level, Color progressColor) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 363,
-          height: 50,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(70),
-                child: LinearProgressIndicator(
-                  minHeight: 24,
-                  value: level,
-                  backgroundColor: Color.fromARGB(255, 177, 175, 175),
-                  valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-                ),
-              ),
-            ],
-          ),
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        width: double.infinity, // Use the full width of the screen
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
         ),
-      ],
+        child: Column(
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: LinearProgressIndicator(
+                minHeight: 20,
+                value: level,
+                backgroundColor: Color.fromARGB(255, 230, 230, 230),
+                valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
